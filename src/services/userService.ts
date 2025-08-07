@@ -5,8 +5,8 @@ import { log } from "console";
 
 const BASE_URL = "http://localhost:3005";
 
-export const fetchUsers = async (): Promise<User[]> => {
-  const res = await axios.get(`${BASE_URL}/users`);
+export const fetchProduct = async (): Promise<User[]> => {
+  const res = await axios.get(`${BASE_URL}/api/product`);
   return res.data;
 };
 

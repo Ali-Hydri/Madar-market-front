@@ -1,9 +1,11 @@
-interface User {
-    id: string;
+interface CategoryItem {
+    id: number;
     name: string;
-    email: string;
-    lastname: string;
-    phone?: string;
-}
+    imageUrl: string;
+    alt: string;
+  }
 
-export default User
+
+export default CategoryItem
+
+
