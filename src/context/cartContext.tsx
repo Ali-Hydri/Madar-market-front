@@ -1,6 +1,6 @@
 "use client";
 import Product from "@/types/productsType";
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
 
 type CartItem = Product & { quantity: number };
 
@@ -9,6 +9,8 @@ interface CartContextType {
   addToCart: (product: Product) => void;
   removeFromCart: (id: number) => void;
   clearCart: () => void;
+  incrementQuantity: (id: number) => void;
+  decrementQuantity: (id: number) => void; 
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -21,6 +23,19 @@ export const useCart = () => {
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+
+  // بارگذاری از localStorage در شروع
+  useEffect(() => {
+    const stored = localStorage.getItem("cart");
+    if (stored) {
+      setCartItems(JSON.parse(stored));
+    }
+  }, []);
+
+  // ذخیره‌سازی در localStorage هر بار که سبد تغییر کرد
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cartItems));
+  }, [cartItems]);
 
   const addToCart = (product: Product) => {
     setCartItems((prev) => {
@@ -36,6 +51,24 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  const incrementQuantity = (id: number) => {
+    setCartItems((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+      )
+    );
+  };
+
+  const decrementQuantity = (id: number) => {
+    setCartItems((prev) =>
+      prev
+        .map((item) =>
+          item.id === id ? { ...item, quantity: item.quantity - 1 } : item
+        )
+        .filter((item) => item.quantity > 0)
+    );
+  };
+
   const removeFromCart = (id: number) => {
     setCartItems((prev) => prev.filter((item) => item.id !== id));
   };
@@ -44,7 +77,14 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <CartContext.Provider
-      value={{ cartItems, addToCart, removeFromCart, clearCart }}
+      value={{
+        cartItems,
+        addToCart,
+        removeFromCart,
+        clearCart,
+        incrementQuantity,
+        decrementQuantity,
+      }}
     >
       {children}
     </CartContext.Provider>

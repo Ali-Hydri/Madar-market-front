@@ -8,7 +8,7 @@ import AdvertisingBox from './Advertising box/advertisingBox'
 
 function body() {
   return (
-    <div className='w-full mx-auto ' >
+    <div className='w-full mx-auto mb-[120px]' >
         <SwiperGallery />
         <Timer />
         <Categories />

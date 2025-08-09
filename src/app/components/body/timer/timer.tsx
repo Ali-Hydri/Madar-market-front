@@ -7,14 +7,14 @@ function Timer() {
   const [timeLeft, setTimeLeft] = useState({
     hours: 23,
     minutes: 59,
-    seconds: 59
+    seconds: 59,
   });
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeLeft(prevTime => {
+      setTimeLeft((prevTime) => {
         let { hours, minutes, seconds } = prevTime;
-        
+
         if (seconds > 0) {
           seconds--;
         } else {
@@ -26,14 +26,13 @@ function Timer() {
             if (hours > 0) {
               hours--;
             } else {
-              // Reset timer when it reaches zero
               hours = 23;
               minutes = 59;
               seconds = 59;
             }
           }
         }
-        
+
         return { hours, minutes, seconds };
       });
     }, 1000);
@@ -43,8 +42,11 @@ function Timer() {
 
   // Convert English digits to Persian
   const toPersianDigits = (num: number) => {
-    const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
-    return num.toString().padStart(2, '0').replace(/[0-9]/g, (d) => persianDigits[parseInt(d)]);
+    const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+    return num
+      .toString()
+      .padStart(2, "0")
+      .replace(/[0-9]/g, (d) => persianDigits[parseInt(d)]);
   };
 
   return (
@@ -64,17 +66,39 @@ function Timer() {
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-1 pl-[12px] py-[17px]">
-          <div className="w-[30px] h-[24px] bg-[#FA2C37] rounded-[4px] text-white flex justify-center items-center text-sm">
-            {toPersianDigits(timeLeft.seconds)}
+        <div className="grid grid-flow-col gap-3 text-center auto-cols-max pl-3 font-bold">
+          <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content w-[30px] h-[24px] bg-[#FA2C37] rounded-[4px] text-white justify-center items-center text-sm">
+            <span className="countdown font-mono text-">
+              <span
+                style={{ "--value": 59 } as React.CSSProperties}
+                aria-live="polite"
+                aria-label={toPersianDigits(timeLeft.seconds)}
+              >
+                {toPersianDigits(timeLeft.seconds)}
+              </span>
+            </span>
           </div>
-          <p className="text-[#FA2C37]">:</p>
-          <div className="w-[30px] h-[24px] bg-[#FA2C37] rounded-[4px] text-white flex justify-center items-center text-sm">
-            {toPersianDigits(timeLeft.minutes)}
+          <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content w-[30px] h-[24px] bg-[#FA2C37] rounded-[4px] text-white justify-center items-center text-sm">
+            <span className="countdown font-mono ">
+              <span
+                style={{ "--value": 24 } as React.CSSProperties}
+                aria-live="polite"
+                aria-label={toPersianDigits(timeLeft.minutes)}
+              >
+                {toPersianDigits(timeLeft.minutes)}
+              </span>
+            </span>
           </div>
-          <p className="text-[#FA2C37]">:</p>
-          <div className="w-[30px] h-[24px] bg-[#FA2C37] rounded-[4px] text-white flex justify-center items-center text-sm">
-            {toPersianDigits(timeLeft.hours)}
+          <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content w-[30px] h-[24px] bg-[#FA2C37] rounded-[4px] text-white justify-center items-center text-sm">
+            <span className="countdown font-mono ">
+              <span
+                style={{ "--value": 10 } as React.CSSProperties}
+                aria-live="polite"
+                aria-label={toPersianDigits(timeLeft.hours)}
+              >
+                {toPersianDigits(timeLeft.hours)}
+              </span>
+            </span>
           </div>
         </div>
       </div>

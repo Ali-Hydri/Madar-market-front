@@ -1,21 +1,20 @@
 "use client";
-import React, { useState } from "react";
-import Image, { StaticImageData } from "next/image";
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import { useCart } from "@/context/cartContext";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-// Import images - using existing assets
-import product2 from "@/assets/body/روغن زیتون.png";
-import product3 from "@/assets/body/سبد.png";
 import SpecialProducts2 from "./specials2";
+import { RiDeleteBin6Fill } from "react-icons/ri";
 
 interface Product {
   id: number;
   name: string;
-  image: StaticImageData;
+  imageUrl: string;
   originalPrice: number;
   discountedPrice: number;
   discountPercentage: number;
@@ -54,7 +53,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
         <div className="relative h-64 bg-gray-50 rounded-t-2xl flex items-center justify-center">
           <div className="w-48 h-48 relative">
             <Image
-              src={product.image}
+              src={product.imageUrl}
               alt={product.name}
               fill
               className="object-contain"
@@ -123,60 +122,33 @@ const SpecialProducts: React.FC = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const specialProducts: Product[] = [
-    {
-      id: 1,
-      name: "روغن زیتون بکر کریستال",
-      image: product2,
-      originalPrice: 4000000,
-      discountedPrice: 3700000,
-      discountPercentage: 10,
-      description: "روغن زیتون طبیعی و با کیفیت",
-      ingredients: "روغن زیتون خالص",
-      packaging: "بطری پلاستیکی",
-      weight: "5 لیتر",
-    },
-    {
-      id: 2,
-      name: "روغن مایع آفتابگردان",
-      image: product3,
-      originalPrice: 85000,
-      discountedPrice: 68000,
-      discountPercentage: 20,
-      description: "روغن مایع طبیعی",
-      ingredients: "روغن آفتابگردان",
-      packaging: "بطری پلاستیکی",
-      weight: "1 لیتر",
-    },
-    {
-      id: 3,
-      name: "هدفون بی‌سیم",
-      image: product2,
-      originalPrice: 120000,
-      discountedPrice: 96000,
-      discountPercentage: 20,
-      description: "هدفون بی‌سیم با کیفیت بالا",
-      ingredients: "پلاستیک، فلز",
-      packaging: "جعبه مقوایی",
-      weight: "200 گرم",
-    },
-    {
-      id: 4,
-      name: "هدفون بی‌سیم",
-      image: product3,
-      originalPrice: 120000,
-      discountedPrice: 96000,
-      discountPercentage: 20,
-      description: "هدفون بی‌سیم با کیفیت بالا",
-      ingredients: "پلاستیک، فلز",
-      packaging: "جعبه مقوایی",
-      weight: "200 گرم",
-    },
-  ];
+  const [specialProducts, setSpecialProducts] = useState<Product[]>([]);
+  const BASE_URL = "http://localhost:3005";
 
-  const handleProductClick = (product: Product) => {
-    setSelectedProduct(product);
-    setIsModalOpen(true);
+  useEffect(() => {
+    const fetchSpecials = async () => {
+      try {
+        const res = await fetch(`${BASE_URL}/api/products/special`);
+        if (!res.ok) throw new Error("خطا در دریافت محصولات ویژه");
+        const data = await res.json();
+        setSpecialProducts(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchSpecials();
+  }, []);
+
+  const { addToCart, cartItems, incrementQuantity, decrementQuantity } =
+    useCart();
+
+  const getQuantityInCart = (productId: number) => {
+    const item = cartItems.find((item) => item.id === productId);
+    return item ? item.quantity : 0;
+  };
+
+  const handleAddToCart = (product: Product) => {
+    addToCart({ ...product, quantity: 1 });
   };
 
   const closeModal = () => {
@@ -199,7 +171,7 @@ const SpecialProducts: React.FC = () => {
       {/* Products Slider */}
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
-        spaceBetween={60}
+        spaceBetween={50}
         slidesPerView={2.3}
         navigation={{
           nextEl: ".swiper-button-next",
@@ -216,16 +188,16 @@ const SpecialProducts: React.FC = () => {
         loop={true}
         breakpoints={{
           640: {
-            slidesPerView: 2.2,
-            spaceBetween: 20,
+            slidesPerView: 2.3,
+            spaceBetween: 50,
           },
           768: {
-            slidesPerView: 2.2,
-            spaceBetween: 24,
+            slidesPerView: 2.3,
+            spaceBetween: 50,
           },
           1024: {
-            slidesPerView: 2.2,
-            spaceBetween: 24,
+            slidesPerView: 2.3,
+            spaceBetween: 50,
           },
         }}
         className="special-products-swiper"
@@ -240,11 +212,10 @@ const SpecialProducts: React.FC = () => {
                   <div className="w-full h-48 rounded-xl flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-300">
                     <div className="w-32 h-32 relative">
                       <Image
-                        src={product.image}
+                        src={`/images/products/${product.imageUrl}.png`}
                         alt={product.name}
                         fill
-                        className="object-contain"
-                        sizes="128px"
+                        className="object-contain rounded-t-xl"
                       />
                     </div>
                   </div>
@@ -274,15 +245,35 @@ const SpecialProducts: React.FC = () => {
                   </div>
 
                   {/* Add to Cart Button */}
-                  <button
-                    className="w-full bg-[#F7F7F7] text-[#787471] border-[1px] border-[#F5F2EF] text-sm font-medium py-2 rounded-[20px] hover:bg-gray-200 transition-colors duration-300 mt-3 cursor-pointer"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleProductClick(product);
-                    }}
-                  >
-                    افزودن به سبد خرید
-                  </button>
+                  {getQuantityInCart(product.id) === 0 ? (
+                    <button
+                      className="w-full bg-[#F7F7F7] text-[#787471] border-[1px] border-[#F5F2EF] text-sm font-medium py-2 rounded-[20px] hover:bg-gray-200 transition-colors duration-300 mt-3 cursor-pointer"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        addToCart({ ...product, quantity: 1 });
+                      }}
+                    >
+                      افزودن به سبد خرید
+                    </button>
+                  ) : (
+                    <div className="flex items-center justify-between bg-[#F7F7F7] border border-[#F5F2EF] rounded-[20px] mt-3">
+                      <button
+                        onClick={() => incrementQuantity(product.id)}
+                        className=" px-2 text-[22px] text-orange-500 cursor-pointer"
+                      >
+                        +
+                      </button>
+                      <span className="px-2">
+                        {getQuantityInCart(product.id)}
+                      </span>
+                      <button
+                  onClick={() => decrementQuantity(product.id)}
+                  className="text-orange-500 px-2 text-[18px] cursor-pointer"
+                >
+                  <RiDeleteBin6Fill />
+                </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

@@ -1,6 +1,7 @@
 import { useCart } from "@/context/cartContext";
 import Product from "@/types/productsType";
 import Image from "next/image";
+import { RiDeleteBin6Fill } from "react-icons/ri";
 
 interface ProductModalProps {
   product: Product | null;
@@ -14,13 +15,15 @@ const ProductModal: React.FC<ProductModalProps> = ({
   isOpen,
   onClose,
 }) => {
-  const { addToCart } = useCart();
-
+  const { cartItems, addToCart, incrementQuantity, decrementQuantity } =
+    useCart();
 
   if (!isOpen || !product) return null;
 
+  const itemInCart = cartItems.find((item) => item.id === product.id);
+
   return (
-    <div className="fixed inset-0 flex items-end justify-center z-50 w-[375px] mx-auto">
+    <div className="fixed inset-0 flex items-end justify-center z-50 w-[375px] mx-auto pb-10">
       <div
         className={`bg-[#FAFAFA] rounded-t-2xl w-full h-[90vh] overflow-y-auto relative transform transition-transform duration-300 ease-out ${
           isOpen ? "translate-y-0" : "translate-y-full"
@@ -109,14 +112,30 @@ const ProductModal: React.FC<ProductModalProps> = ({
               {/* Regular Price */}
               <div className="flex justify-between gap-[40px]">
                 {/* Add to Cart Button */}
-                <button
-                  onClick={() =>{
-                    addToCart(product)}
-                  } 
-                  className="cursor-pointer bg-[#FF6A29] text-white py-2 px-[12px] rounded-[12px]  font-bold text-[14px] hover:bg-orange-600 transition-colors w-[246px] h-[48px]"
-                >
-                  افزودن به سبد خرید
-                </button>
+                {!itemInCart ? (
+                  <button
+                    onClick={() => addToCart(product)}
+                    className="bg-orange-500 text-white px-4 py-2 rounded-[12px] w-[246px] h-[48px] cursor-pointer"
+                  >
+                    افزودن به سبد خرید
+                  </button>
+                ) : (
+                  <div className="flex items-center justify-center gap-10 bg-[#F5F2EF] rounded-[12px] w-[246px] h-[48px] ">
+                    <button
+                      onClick={() => incrementQuantity(product.id)}
+                      className=" px-2 text-[30px] text-orange-500 cursor-pointer"
+                    >
+                      +
+                    </button>
+                    <span className=" py-1 px-3 rounded">{itemInCart.quantity}</span>
+                    <button
+                      onClick={() => decrementQuantity(product.id)}
+                      className="text-orange-500 px-2 text-[24px] cursor-pointer"
+                    >
+                      <RiDeleteBin6Fill />
+                    </button>
+                  </div>
+                )}
                 <div className="flex flex-col justify-between items-center">
                   <span className="text-sm text-[#787471]">قیمت کالا</span>
                   <span className="flex gap-1 font-bold justify-center items-center text-base text-[#FF6A29]">

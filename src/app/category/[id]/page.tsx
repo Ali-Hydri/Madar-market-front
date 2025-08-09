@@ -12,6 +12,7 @@ import ProductModal from "./productModal";
 import ProductCard from "./productCard";
 import CartModal from "@/app/components/CartModal/cartModal";
 import { useCart } from "@/context/cartContext";
+import Footer from "@/app/components/footer/footer";
 
 interface SubCategory {
   id: number;
@@ -60,7 +61,7 @@ const CategoryPage: React.FC = () => {
   };
 
   const handleBackClick = () => {
-    router.back();
+    router.push("/home");
   };
 
   const handleSortChange = (sortValue: string) => {
@@ -103,7 +104,7 @@ const CategoryPage: React.FC = () => {
               viewBox="0 0 24 24"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              className="ml-2"
+              className="ml-2 cursor-pointer"
             >
               <path
                 d="M9 6l6 6-6 6"
@@ -132,7 +133,9 @@ const CategoryPage: React.FC = () => {
                 <p className="text-white text-[12px] pt-[px] font-bold">
                   مشاهده سبد
                 </p>
-                <p className="text-[10px] text-white">{cartItems.length} محصول</p>
+                <p className="text-[10px] text-white">
+                  {cartItems.length} محصول
+                </p>
               </div>
               <div className="flex items-center justify-center w-[40px] h-[40px] rounded-[10px] border bg-white border-[#C50F1F]">
                 {/* Basket SVG */}
@@ -340,6 +343,7 @@ const CategoryPage: React.FC = () => {
         isOpen={isModalOpen}
         onClose={closeModal}
       />
+      <Footer />
     </div>
   );
 };
