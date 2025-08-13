@@ -16,7 +16,6 @@ import Footer from "@/components/footer/footer";
 
 interface SubCategory {
   id: number;
-  
   name: string;
 }
 

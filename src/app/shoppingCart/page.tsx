@@ -115,8 +115,23 @@ const CartModalPage: React.FC<CartModalProps> = () => {
               localStorage.getItem("orders") || "[]"
             );
 
-            // اضافه کردن سفارشات فعلی به قبلی‌ها
-            const updatedOrders = [...previousOrders, ...cartItems];
+            // محاسبه قیمت کل سفارش
+            const totalPrice = cartItems.reduce(
+              (sum, item) => sum + item.originalPrice * item.quantity,
+              0
+            );
+
+            // ایجاد سفارش جدید با اطلاعات کامل
+            const newOrder = {
+              id: Date.now(), // شناسه منحصر به فرد برای سفارش
+              date: new Date().toISOString(), // تاریخ سفارش
+              items: cartItems, // محصولات سفارش داده شده
+              totalPrice, // قیمت کل
+              itemCount: cartItems.reduce((count, item) => count + item.quantity, 0) // تعداد کل محصولات
+            };
+
+            // اضافه کردن سفارش جدید به سفارشات قبلی
+            const updatedOrders = [...previousOrders, newOrder];
 
             // ذخیره دوباره همه سفارشات
             localStorage.setItem("orders", JSON.stringify(updatedOrders));
