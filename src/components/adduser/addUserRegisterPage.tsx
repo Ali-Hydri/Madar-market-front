@@ -1,16 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { updateUser } from "@/services/userService";
-import User from "@/types/users";
+import { useRouter } from "next/navigation";
+import User from "@/types/categoriesType";
 
 export default function UserRegisterPage() {
-  const { id } = useParams();
   const router = useRouter();
   const [form, setForm] = useState({
     name: "",
     lastname: "",
-    email: "",
     phone: "",
   });
   const [loading, setLoading] = useState(false);
@@ -79,19 +76,12 @@ export default function UserRegisterPage() {
       }
 
       // Validate form
-      if (!form.name || !form.lastname || !form.email || !form.phone) {
+      if (!form.name || !form.lastname || !form.phone) {
         setError("لطفا تمام فیلدها را تکمیل کنید.");
         setLoading(false);
         return;
       }
 
-      // Email validation
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(form.email)) {
-        setError("لطفا ایمیل معتبر وارد کنید.");
-        setLoading(false);
-        return;
-      }
 
       // Phone validation (Iranian phone number format)
       const phoneRegex = /^(\+98|0)?9\d{9}$/;
@@ -102,15 +92,12 @@ export default function UserRegisterPage() {
       }
 
       // Prepare user data with token
-      const userData: Partial<User> = {
+      const userData: Partial<User> & { lastname?: string } = {
         name: form.name,
         lastname: form.lastname,
-        email: form.email,
       };
       console.log(userData);
 
-      // Update user with token authentication
-      const updatedUser = await updateUser(userData);
 
       setSuccess("اطلاعات با موفقیت ذخیره شد!");
 
@@ -118,7 +105,6 @@ export default function UserRegisterPage() {
       const updatedUserData = {
         name: form.name,
         lastname: form.lastname,
-        email: form.email,
         phone: form.phone,
       };
       localStorage.setItem("user", JSON.stringify(updatedUserData));
@@ -192,21 +178,6 @@ export default function UserRegisterPage() {
               onChange={handleChange}
               className="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               placeholder="نام خانوادگی خود را وارد کنید"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block mb-2 font-semibold text-gray-700">
-              ایمیل *
-            </label>
-            <input
-              name="email"
-              type="email"
-              value={form.email}
-              onChange={handleChange}
-              className="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              placeholder="example@email.com"
               required
             />
           </div>

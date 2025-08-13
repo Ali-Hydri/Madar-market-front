@@ -10,113 +10,8 @@ import "swiper/css/pagination";
 
 import SpecialProducts2 from "./specials2";
 import { RiDeleteBin6Fill } from "react-icons/ri";
-
-interface Product {
-  id: number;
-  name: string;
-  imageUrl: string;
-  originalPrice: number;
-  discountedPrice: number;
-  discountPercentage: number;
-  description: string;
-  ingredients?: string;
-  packaging?: string;
-  weight?: string;
-}
-
-interface ProductModalProps {
-  product: Product | null;
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-// Product Modal Component
-const ProductModal: React.FC<ProductModalProps> = ({
-  product,
-  isOpen,
-  onClose,
-}) => {
-  if (!isOpen || !product) return null;
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto relative">
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors z-10"
-        >
-          ×
-        </button>
-
-        {/* Product Image */}
-        <div className="relative h-64 bg-gray-50 rounded-t-2xl flex items-center justify-center">
-          <div className="w-48 h-48 relative">
-            <Image
-              src={product.imageUrl}
-              alt={product.name}
-              fill
-              className="object-contain"
-              sizes="192px"
-            />
-          </div>
-          {/* Image Navigation Dots */}
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-            <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
-            <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
-            <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
-          </div>
-        </div>
-
-        {/* Product Details */}
-        <div className="p-6">
-          <h2 className="text-lg font-bold text-gray-800 mb-4 text-right">
-            {product.name}
-          </h2>
-
-          {/* Specifications */}
-          <div className="grid grid-cols-2 gap-4 mb-6">
-            <div className="bg-gray-50 rounded-lg p-3">
-              <p className="text-sm text-gray-600 mb-1">مواد تشکیل دهنده:</p>
-              <p className="text-sm font-medium text-gray-800">
-                {product.ingredients || "شیر گاوی"}
-              </p>
-            </div>
-            <div className="bg-gray-50 rounded-lg p-3">
-              <p className="text-sm text-gray-600 mb-1">نوع بسته بندی:</p>
-              <p className="text-sm font-medium text-gray-800">
-                {product.packaging || "پلی اتیلن"}
-              </p>
-            </div>
-          </div>
-
-          {/* Pricing */}
-          <div className="space-y-3 mb-6">
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-purple-600 font-medium">
-                قیمت با حامی کارت
-              </span>
-              <span className="text-lg font-bold text-green-600 bg-green-50 px-3 py-1 rounded-lg">
-                {product.discountedPrice.toLocaleString()} تومان
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">قیمت کالا</span>
-              <span className="text-base text-gray-800">
-                {product.originalPrice.toLocaleString()} تومان
-              </span>
-            </div>
-          </div>
-
-          {/* Add to Cart Button */}
-          <button className="w-full bg-orange-500 text-white py-4 rounded-xl font-bold text-lg hover:bg-orange-600 transition-colors">
-            افزودن به سبد خرید
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
+import { Product } from "@/types/types";
+import ProductModal from "@/components/product/productModal";
 
 const SpecialProducts: React.FC = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -131,7 +26,11 @@ const SpecialProducts: React.FC = () => {
         const res = await fetch(`${BASE_URL}/api/products/special`);
         if (!res.ok) throw new Error("خطا در دریافت محصولات ویژه");
         const data = await res.json();
-        setSpecialProducts(data);
+        // Filter products with isSpecial property
+        const filteredProducts = data.filter(
+          (product: Product) => product.isSpecial
+        );
+        setSpecialProducts(filteredProducts);
       } catch (err) {
         console.error(err);
       }
@@ -182,7 +81,7 @@ const SpecialProducts: React.FC = () => {
           el: ".swiper-pagination",
         }}
         autoplay={{
-          delay: 5000,
+          delay: 7000,
           disableOnInteraction: false,
         }}
         loop={true}
@@ -204,8 +103,12 @@ const SpecialProducts: React.FC = () => {
       >
         {specialProducts.map((product) => (
           <SwiperSlide key={product.id}>
-            <div>
-              <div className="mb-[1px] border-[1px] border-[#F5F2EF] bg-white w-[155px] rounded-2xl hover:shadow-xl transition-all duration-300 cursor-pointer group">
+            <div
+              onClick={() => {
+                setSelectedProduct(product);
+                setIsModalOpen(true);
+              }}
+            >              <div className="mb-[1px] border-[1px] border-[#F5F2EF] bg-white w-[155px] rounded-2xl hover:shadow-xl transition-all duration-300 cursor-pointer group">
                 {/* Discount Badge */}
                 <div className="relative">
                   {/* Product Image */}
@@ -267,11 +170,11 @@ const SpecialProducts: React.FC = () => {
                         {getQuantityInCart(product.id)}
                       </span>
                       <button
-                  onClick={() => decrementQuantity(product.id)}
-                  className="text-orange-500 px-2 text-[18px] cursor-pointer"
-                >
-                  <RiDeleteBin6Fill />
-                </button>
+                        onClick={() => decrementQuantity(product.id)}
+                        className="text-orange-500 px-2 text-[18px] cursor-pointer"
+                      >
+                        <RiDeleteBin6Fill />
+                      </button>
                     </div>
                   )}
                 </div>

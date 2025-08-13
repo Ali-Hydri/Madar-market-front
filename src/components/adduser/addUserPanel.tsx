@@ -170,7 +170,7 @@ function AddUserContent() {
         />
       )}
       <div className="bg-white rounded-xl shadow-lg p-6 md:p-8 mt-8">
-      <h2 className="text-2xl font-bold mb-6 text-green-700">
+      <h2 className="text-2xl font-bold mb-6 text-[#BA400B]">
         افزودن کاربر جدید
       </h2>
       <UserForm onSubmit={addUserMutate} isLoading={isAdding} />

@@ -1,7 +1,7 @@
 // src/hooks/useUsers.ts
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchProduct, addUser, deleteUser } from "@/services/userService";
-import  User  from "@/types/users";
+import  User  from "@/types/categoriesType";
 
 export const useProduct = () =>
   useQuery<User[]>({

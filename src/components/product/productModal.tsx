@@ -1,13 +1,9 @@
 import { useCart } from "@/context/cartContext";
 import Product from "@/types/productsType";
+import { ProductModalProps } from "@/types/types";
 import Image from "next/image";
+import { useEffect } from "react";
 import { RiDeleteBin6Fill } from "react-icons/ri";
-
-interface ProductModalProps {
-  product: Product | null;
-  isOpen: boolean;
-  onClose: () => void;
-}
 
 // Product Modal Component
 const ProductModal: React.FC<ProductModalProps> = ({
@@ -18,12 +14,30 @@ const ProductModal: React.FC<ProductModalProps> = ({
   const { cartItems, addToCart, incrementQuantity, decrementQuantity } =
     useCart();
 
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden"; // جلوگیری از اسکرول
+    } else {
+      document.body.style.overflow = ""; // بازگردانی حالت عادی
+    }
+
+    return () => {
+      document.body.style.overflow = ""; // تمیزکاری در خروج از کامپوننت
+    };
+  }, [isOpen]);
+
+
   if (!isOpen || !product) return null;
 
   const itemInCart = cartItems.find((item) => item.id === product.id);
 
   return (
     <div className="fixed inset-0 flex items-end justify-center z-50 w-[375px] mx-auto pb-10">
+      <div
+        className="absolute inset-0 bg-black opacity-70 transition-opacity"
+        onClick={onClose} // کلیک روی بک‌گراند مودال رو ببنده
+      ></div>
       <div
         className={`bg-[#FAFAFA] rounded-t-2xl w-full h-[90vh] overflow-y-auto relative transform transition-transform duration-300 ease-out ${
           isOpen ? "translate-y-0" : "translate-y-full"
@@ -127,7 +141,9 @@ const ProductModal: React.FC<ProductModalProps> = ({
                     >
                       +
                     </button>
-                    <span className=" py-1 px-3 rounded">{itemInCart.quantity}</span>
+                    <span className=" py-1 px-3 rounded">
+                      {itemInCart.quantity}
+                    </span>
                     <button
                       onClick={() => decrementQuantity(product.id)}
                       className="text-orange-500 px-2 text-[24px] cursor-pointer"

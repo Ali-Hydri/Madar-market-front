@@ -15,7 +15,7 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-opacity-40 flex items-end justify-center ">
+    <div className="fixed inset-0 z-50 flex items-end justify-center ">
       <div className="bg-gray-100 w-[375px] h-[98vh] rounded-t-2xl overflow-y-auto p-4 border-t-[1px] border-gray-300">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-bold">سبد خرید</h2>

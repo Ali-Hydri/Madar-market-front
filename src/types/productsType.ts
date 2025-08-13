@@ -9,6 +9,9 @@
     ingredients?: string;
     packaging?: string;
     weight?: string;
+    isSpecial?: boolean;
+    isSpecialLine2?: boolean;
   }
+  
 
   export default Product

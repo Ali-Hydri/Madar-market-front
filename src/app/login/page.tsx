@@ -118,7 +118,14 @@ export default function LoginPage() {
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
         localStorage.setItem("isRegistered", data.isRegistered);
-        router.push("/home");
+        
+        // Check if user is admin
+        const isAdmin = data.user?.isAdmin === true;
+        if (isAdmin) {
+          router.push("/");
+        } else {
+          router.push("/dashboard");
+        }
       } else {
         setOtpError(data.message || " کد وارد شده نادرست است");
       }

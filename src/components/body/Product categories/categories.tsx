@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Image, { StaticImageData } from "next/image";
 import { useRouter } from "next/navigation";
 import { getCategories } from "@/lib/api";
-import CategoryItem from "@/types/users";
+import CategoryItem from "@/types/categoriesType";
 
 
 const Categories: React.FC = () => {

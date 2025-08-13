@@ -7,12 +7,12 @@ import { LuSearch } from "react-icons/lu";
 import { RiShoppingBasket2Line } from "react-icons/ri";
 import { getProductsByCategory } from "@/lib/api";
 import Product from "@/types/productsType";
-import CategoryList from "@/app/components/body/Product categories/categoriesInProduct";
-import ProductModal from "./productModal";
-import ProductCard from "./productCard";
-import CartModal from "@/app/components/CartModal/cartModal";
+import CategoryList from "@/components/body/Product categories/categoriesInProduct";
+import ProductModal from "../../../components/product/productModal";
+import ProductCard from "../../../components/product/productCard";
+import CartModal from "@/components/CartModal/cartModal";
 import { useCart } from "@/context/cartContext";
-import Footer from "@/app/components/footer/footer";
+import Footer from "@/components/footer/footer";
 
 interface SubCategory {
   id: number;
