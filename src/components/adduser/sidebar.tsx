@@ -10,6 +10,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { LuLayoutPanelTop } from "react-icons/lu";
 
 interface MenuItem {
   id: string;
@@ -32,11 +33,12 @@ const Sidebar: React.FC = () => {
 
   // تشخیص آیتم فعال بر اساس مسیر فعلی
   const getActiveItem = () => {
-    if (pathname === "/dashboard") return "dashboard";
-    if (pathname === "/dashboard/profile") return "profile";
-    if (pathname === "/dashboard/setting") return "settings";
-    if (pathname === "/dashboard/about-us") return "about";
-    return "dashboard";
+    if (pathname === "/") return "/";
+    if (pathname === "/panel") return "panel";
+    if (pathname === "/panel/profile") return "profile";
+    if (pathname === "/panel/setting") return "settings";
+    if (pathname === "/panel/UserOrders") return "UserOrders";
+    return "panel";
   };
 
   const [activeItem, setActiveItem] = useState(getActiveItem());
@@ -49,28 +51,35 @@ const Sidebar: React.FC = () => {
   // لیست منوها
   const menuItems: MenuItem[] = [
     {
-      id: "dashboard",
+      id: "/",
       label: "داشبورد",
-      href: "/dashboard",
+      href: "/",
       icon: <Home size={20} />,
+    },
+    {
+      id:"panel",
+      label:"پنل مدیریت",
+      href:"/panel",
+      icon: <LuLayoutPanelTop size={20} />
+
+    },
+    {
+      id: "UserOrders",
+      label: "سفارش ها",
+      href: "/panel/UserOrders",
+      icon: <Info size={20} />,
     },
     {
       id: "profile",
       label: "پروفایل",
-      href: "/dashboard/profile",
+      href: "/panel/profile",
       icon: <User size={20} />,
     },
     {
       id: "settings",
       label: "تنظیمات",
-      href: "/dashboard/setting",
+      href: "/panel/setting",
       icon: <Settings size={20} />,
-    },
-    {
-      id: "about",
-      label: "درباره ما",
-      href: "/dashboard/about-us",
-      icon: <Info size={20} />,
     },
   ];
 
@@ -105,7 +114,7 @@ const Sidebar: React.FC = () => {
       {/* Sidebar اصلی */}
       <div
         className={` top-0 right-0 h-full bg-gradient-to-br from-white to-gray-50 shadow-2xl transform transition-all duration-300 ease-out  ${
-          isOpen ? "translate-x-0 w-75" : "translate-x-full w-0 overflow-hidden"
+          isOpen ? "translate-x-0 w-75" : "translate-x-full w-75 overflow-hidden"
         }`}
       >
         {/* Header */}
@@ -139,7 +148,7 @@ const Sidebar: React.FC = () => {
                       : "text-gray-700 hover:bg-gray-100 hover:transform hover:scale-102"
                   }`}
                 >
-                  <div className="flex items-center space-x-4 space-x-reverse">
+                  <div className="flex items-center space-x-4 gap-1 space-x-reverse">
                     <div
                       className={`p-2 ml-1 rounded-xl ${
                         activeItem === item.id

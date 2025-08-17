@@ -9,7 +9,6 @@ import {
 import { fetchUsers, addUser, deleteUser } from "@/services/userService";
 import { useRouter } from "next/navigation";
 import AddUserPanel from "@/components/adduser/addUserPanel";
-import Sidebar from "@/components/adduser/sidebar";
 
 // بهتر است این interface در src/types/user.ts باشد
 interface User {
@@ -224,9 +223,8 @@ function UsersPageContent() {
   const handleDeleteCancel = () => setDeleteModal({ open: false, user: null });
 
   return (
-    <div className="flex h-screen">
-      <Sidebar />
-      <div className="flex-1 ml-0 md:ml-64 p-4 md:p-8 bg-gradient-to-br from-orange-50 to-orange-100 min-h-screen flex flex-col gap-8">
+    <div className="flex h-screen bg-gradient-to-br from-orange-50 to-orange-100">
+      <div className="flex-1 ml-0 md:ml-64 p-4 md:p-8  min-h-screen flex flex-col gap-8">
         {/* Success Popup */}
         {successPopup.show && (
           <SuccessPopup
