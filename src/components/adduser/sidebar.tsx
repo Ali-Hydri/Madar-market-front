@@ -114,7 +114,7 @@ const Sidebar: React.FC = () => {
       {/* Sidebar اصلی */}
       <div
         className={` top-0 right-0 h-full bg-gradient-to-br from-white to-gray-50 shadow-2xl transform transition-all duration-300 ease-out  ${
-          isOpen ? "translate-x-0 w-75" : "translate-x-full w-75 overflow-hidden"
+          isOpen ? "translate-x-0 w-75" : "translate-x-full w-0 overflow-hidden"
         }`}
       >
         {/* Header */}
