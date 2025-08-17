@@ -99,15 +99,34 @@ export default function Orders() {
               <span>{formatDate(selectedOrder.date)}</span>
             </div>
             <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-500">تعداد محصولات:</span>
+                  <span>{selectedOrder.itemCount} عدد</span>
+                </div>
+            <div className="flex justify-between items-center mt-2 pt-2 border-t border-gray-100">
               <span className="text-sm text-gray-500">مبلغ کل:</span>
-              <span className="font-bold text-green-600">{selectedOrder.totalPrice.toLocaleString()} تومان</span>
+              <span className="font-bold text-green-600">
+                {selectedOrder.totalPrice.toLocaleString()} تومان
+              </span>
             </div>
+            <div
+                  className="flex justify-center items-center mt-2 pt-2 "
+                  onClick={handleBackToList}
+                >
+                  <button className="bg-red-500 p-1 text-[13px] text-white rounded-xl cursor-pointer">
+                    بستن
+                  </button>
+                </div>
           </div>
 
-          <h3 className="font-bold text-gray-800 mb-2">محصولات سفارش داده شده:</h3>
+          <h3 className="font-bold text-gray-800 mb-2">
+            محصولات سفارش داده شده:
+          </h3>
           <div className="space-y-3">
             {selectedOrder.items.map((item, index) => (
-              <div key={index} className="bg-white shadow rounded-lg p-3 flex items-center gap-3">
+              <div
+                key={index}
+                className="bg-white shadow rounded-lg p-3 flex items-center gap-3"
+              >
                 <div className="relative w-16 h-16 rounded overflow-hidden">
                   <Image
                     src={`/images/products/${item.imageUrl}.png`}
@@ -117,13 +136,23 @@ export default function Orders() {
                   />
                 </div>
                 <div className="flex-1">
-                  <h4 className="font-bold text-gray-800 text-sm">{item.name}</h4>
-                  <p className="text-xs text-gray-600">{item.originalPrice.toLocaleString()} تومان</p>
-                  <p className="text-xs text-gray-400">تعداد: {item.quantity}</p>
+                  <h4 className="font-bold text-gray-800 text-sm">
+                    {item.name}
+                  </h4>
+                  <p className="text-xs text-gray-600">
+                    {item.originalPrice.toLocaleString()} تومان
+                  </p>
+                  <p className="text-xs text-gray-400">
+                    تعداد: {item.quantity}
+                  </p>
                 </div>
-                <div className="text-left">
-                  <p className="text-sm font-bold text-gray-800">
-                    {(item.originalPrice * item.quantity).toLocaleString()} تومان
+                <div>
+                  <p className="text-[10px] text-gray-400 text-center">
+                    مجموع:
+                  </p>
+                  <p className="text-sm font-bold text-gray-800 text-left">
+                    {(item.originalPrice * item.quantity).toLocaleString()}{" "}
+                    تومان
                   </p>
                 </div>
               </div>
@@ -179,7 +208,9 @@ export default function Orders() {
       <div className="flex-1 mt-[90px] px-4 pb-20">
         {orders.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center text-gray-500">
-            <p className="mt-4 text-lg font-semibold">هیچ سفارشی ثبت نشده است</p>
+            <p className="mt-4 text-lg font-semibold">
+              هیچ سفارشی ثبت نشده است
+            </p>
             <button
               onClick={() => router.push("/home")}
               className="mt-6 px-6 py-2 bg-orange-400 text-white rounded-lg hover:bg-orange-500 transition-all cursor-pointer"
@@ -192,7 +223,6 @@ export default function Orders() {
             {orders.map((order, index) => (
               <div
                 key={index}
-                onClick={() => handleOrderClick(order)}
                 className="bg-white shadow rounded-lg p-4 cursor-pointer hover:shadow-md transition-shadow"
               >
                 <div className="flex justify-between items-center mb-2">
@@ -209,7 +239,17 @@ export default function Orders() {
                 </div>
                 <div className="flex justify-between items-center mt-2 pt-2 border-t border-gray-100">
                   <span className="text-sm text-gray-500">مبلغ کل:</span>
-                  <span className="font-bold text-green-600">{order.totalPrice.toLocaleString()} تومان</span>
+                  <span className="font-bold text-green-600">
+                    {order.totalPrice.toLocaleString()} تومان
+                  </span>
+                </div>
+                <div
+                  className="flex justify-center items-center mt-2 pt-2 "
+                  onClick={() => handleOrderClick(order)}
+                >
+                  <button className="bg-blue-500 p-1 text-[13px] text-white rounded-xl cursor-pointer">
+                    جزییات
+                  </button>
                 </div>
               </div>
             ))}

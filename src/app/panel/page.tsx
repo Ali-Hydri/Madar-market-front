@@ -9,6 +9,7 @@ import {
 import { fetchUsers, addUser, deleteUser } from "@/services/userService";
 import { useRouter } from "next/navigation";
 import AddUserPanel from "@/components/adduser/addUserPanel";
+import Sidebar from "@/components/adduser/sidebar";
 
 // بهتر است این interface در src/types/user.ts باشد
 interface User {
@@ -223,46 +224,49 @@ function UsersPageContent() {
   const handleDeleteCancel = () => setDeleteModal({ open: false, user: null });
 
   return (
-    <div className="max-w-5xl mx-auto p-4 md:p-8 bg-gradient-to-br from-orange-50 to-orange-100 min-h-screen flex flex-col gap-8">
-      {/* Success Popup */}
-      {successPopup.show && (
-        <SuccessPopup
-          message={successPopup.message}
-          onClose={() => setSuccessPopup({ show: false, message: "" })}
+    <div className="flex h-screen">
+      <Sidebar />
+      <div className="flex-1 ml-0 md:ml-64 p-4 md:p-8 bg-gradient-to-br from-orange-50 to-orange-100 min-h-screen flex flex-col gap-8">
+        {/* Success Popup */}
+        {successPopup.show && (
+          <SuccessPopup
+            message={successPopup.message}
+            onClose={() => setSuccessPopup({ show: false, message: "" })}
+          />
+        )}
+        {/* Add User Form */}
+        <AddUserPanel />
+        {/* User Table */}
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center min-h-[200px]">
+            <div className="w-16 h-16 border-4 border-orange-400 border-t-transparent rounded-full animate-spin mb-4"></div>
+            <span className="text-gray-500">در حال بارگذاری کاربران...</span>
+          </div>
+        ) : error ? (
+          <div className="bg-red-100 text-red-700 rounded-lg p-4 text-center font-bold">
+            خطا در دریافت داده
+          </div>
+        ) : (
+          <UserTable
+            users={data || []}
+            onDelete={handleDeleteClick}
+            isDeleting={isDeleting}
+            onRefresh={refetch}
+            isFetching={isFetching}
+          />
+        )}
+        {/* Delete Modal */}
+        <DeleteModal
+          open={deleteModal.open}
+          onClose={handleDeleteCancel}
+          onConfirm={handleDeleteConfirm}
+          userName={
+            deleteModal.user
+              ? `${deleteModal.user.name} ${deleteModal.user.lastname}`
+              : ""
+          }
         />
-      )}
-      {/* Add User Form */}
-      <AddUserPanel />
-      {/* User Table */}
-      {isLoading ? (
-        <div className="flex flex-col items-center justify-center min-h-[200px]">
-          <div className="w-16 h-16 border-4 border-orange-400 border-t-transparent rounded-full animate-spin mb-4"></div>
-          <span className="text-gray-500">در حال بارگذاری کاربران...</span>
-        </div>
-      ) : error ? (
-        <div className="bg-red-100 text-red-700 rounded-lg p-4 text-center font-bold">
-          خطا در دریافت داده
-        </div>
-      ) : (
-        <UserTable
-          users={data || []}
-          onDelete={handleDeleteClick}
-          isDeleting={isDeleting}
-          onRefresh={refetch}
-          isFetching={isFetching}
-        />
-      )}
-      {/* Delete Modal */}
-      <DeleteModal
-        open={deleteModal.open}
-        onClose={handleDeleteCancel}
-        onConfirm={handleDeleteConfirm}
-        userName={
-          deleteModal.user
-            ? `${deleteModal.user.name} ${deleteModal.user.lastname}`
-            : ""
-        }
-      />
+      </div>
     </div>
   );
 }
@@ -274,3 +278,4 @@ export default function UsersPage() {
     </QueryClientProvider>
   );
 }
+
