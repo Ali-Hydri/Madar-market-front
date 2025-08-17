@@ -24,7 +24,7 @@ function OrderTable({
   return (
     <div className="bg-white rounded-xl shadow-md p-4 mt-20 overflow-x-auto mx-20">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-bold">
+        <h2 className="text-xl font-bold flex gap-1 items-center">
           لیست سفارشات
           <span className="text-gray-500 text-base">({orders.length})</span>
         </h2>

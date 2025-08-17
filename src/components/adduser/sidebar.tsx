@@ -9,8 +9,9 @@ import {
   X,
   ChevronRight,
 } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { LuLayoutPanelTop } from "react-icons/lu";
+import { TbLogout2 } from "react-icons/tb";
 
 interface MenuItem {
   id: string;
@@ -57,11 +58,10 @@ const Sidebar: React.FC = () => {
       icon: <Home size={20} />,
     },
     {
-      id:"panel",
-      label:"پنل مدیریت",
-      href:"/panel",
-      icon: <LuLayoutPanelTop size={20} />
-
+      id: "panel",
+      label: "پنل مدیریت",
+      href: "/panel",
+      icon: <LuLayoutPanelTop size={20} />,
     },
     {
       id: "UserOrders",
@@ -82,6 +82,8 @@ const Sidebar: React.FC = () => {
       icon: <Settings size={20} />,
     },
   ];
+
+  const router = useRouter();
 
   const [userData, setUserData] = useState<UserType | null>(null);
 
@@ -173,6 +175,17 @@ const Sidebar: React.FC = () => {
               </li>
             ))}
           </ul>
+          <button
+            onClick={() => {
+              localStorage.removeItem("token");
+              localStorage.removeItem("user");
+              router.push("/login");
+            }}
+            className="w-full h-[40px] mt-2 bg-red-400 hover:bg-red-500 text-gray-700 font-bold py-3 rounded-lg transition-all flex items-center justify-center gap-1 cursor-pointer"
+          >
+            <TbLogout2 size={23} />
+            خروج از حساب کاربری
+          </button>
         </nav>
 
         {/* Footer */}

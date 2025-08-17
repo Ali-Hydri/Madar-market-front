@@ -224,7 +224,7 @@ function UsersPageContent() {
 
   return (
     <div className="flex h-screen bg-gradient-to-br from-orange-50 to-orange-100">
-      <div className="flex-1 ml-0 md:ml-64 p-4 md:p-8  min-h-screen flex flex-col gap-8">
+      <div className="flex-1 mx-20 p-8  min-h-screen flex flex-col gap-8">
         {/* Success Popup */}
         {successPopup.show && (
           <SuccessPopup
