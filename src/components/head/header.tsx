@@ -11,7 +11,6 @@ import { Product } from "@/types/types";
 import { fetchProduct } from "@/services/userService";
 import ProductModal from "../product/productModal";
 
-
 const Header: React.FC = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [searchResults, setSearchResults] = useState<Product[]>([]);
@@ -37,7 +36,6 @@ const Header: React.FC = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
 
   const handleSearch = async (searchTerm: string) => {
     if (searchTerm.trim() === "") {
