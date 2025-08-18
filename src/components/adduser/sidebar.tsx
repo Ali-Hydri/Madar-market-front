@@ -181,7 +181,7 @@ const Sidebar: React.FC = () => {
               localStorage.removeItem("user");
               router.push("/login");
             }}
-            className="w-full h-[40px] mt-2 bg-red-400 hover:bg-red-500 text-gray-700 font-bold py-3 rounded-lg transition-all flex items-center justify-center gap-1 cursor-pointer"
+            className="w-full h-[40px] mt-10 bg-red-400 hover:bg-red-500 text-gray-700 font-bold py-3 rounded-lg transition-all flex items-center justify-center gap-1 cursor-pointer"
           >
             <TbLogout2 size={23} />
             خروج از حساب کاربری

@@ -1,11 +1,12 @@
 // src/services/userService.ts
 import User from "@/types/usersType";
+import { Product } from "@/types/types";
 import axios from "axios";
 import { log } from "console";
 
 const BASE_URL = "http://localhost:3005";
 
-export const fetchProduct = async (): Promise<User[]> => {
+export const fetchProduct = async (): Promise<Product[]> => {
   const res = await axios.get(`${BASE_URL}/api/product`);
   return res.data;
 };
